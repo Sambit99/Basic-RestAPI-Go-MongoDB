@@ -72,3 +72,14 @@ func GetUserById(userId string) User {
 
 	return user
 }
+
+func (user User) CreateUser() string {
+	newUser, err := db.InsertOne(ctx, user, nil)
+
+	if err != nil {
+		log.Fatal("Error while creating user", err.Error())
+	}
+
+	id := fmt.Sprintf("%v", newUser.InsertedID)
+	return id
+}
