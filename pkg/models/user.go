@@ -101,3 +101,38 @@ func DeleteUser(userId string) bool {
 
 	return result.DeletedCount > 0
 }
+func UpdateUser(updatedUser *User) bool {
+
+	filter := bson.M{"_id": updatedUser.ID}
+
+	idStr := updatedUser.ID.Hex()
+
+	existingUser := GetUserById(idStr)
+
+	if updatedUser.Age != 0 {
+		existingUser.Age = updatedUser.Age
+	}
+
+	if updatedUser.Gender != "" {
+		existingUser.Gender = updatedUser.Gender
+	}
+	if updatedUser.Name != "" {
+		existingUser.Name = updatedUser.Name
+	}
+
+	update := bson.M{
+		"$set": bson.M{
+			"name":   existingUser.Name,
+			"age":    existingUser.Age,
+			"gender": existingUser.Gender,
+		},
+	}
+
+	result, err := db.UpdateOne(ctx, filter, update)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return result.ModifiedCount > 0
+}
