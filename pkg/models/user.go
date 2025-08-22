@@ -83,3 +83,21 @@ func (user User) CreateUser() string {
 	id := fmt.Sprintf("%v", newUser.InsertedID)
 	return id
 }
+
+func DeleteUser(userId string) bool {
+	id, err := bson.ObjectIDFromHex(userId)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	filter := bson.M{"_id": id}
+
+	result, err := db.DeleteOne(ctx, filter)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return result.DeletedCount > 0
+}
