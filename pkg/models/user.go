@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/Sambit99/Basic-RestAPI-Go-MongoDB/pkg/config"
@@ -45,4 +46,29 @@ func GetAllUser() []bson.M {
 	}
 
 	return users
+}
+
+func GetUserById(userId string) User {
+
+	id, err := bson.ObjectIDFromHex(userId)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	filter := bson.M{"_id": id}
+
+	var user User
+
+	err = db.FindOne(ctx, filter, nil).Decode(&user)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			fmt.Println("No documents found")
+		} else {
+			log.Fatal("Error while finding user by id", err.Error())
+		}
+	}
+
+	return user
 }
