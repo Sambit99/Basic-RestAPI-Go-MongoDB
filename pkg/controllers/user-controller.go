@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/Sambit99/Basic-RestAPI-Go-MongoDB/pkg/models"
@@ -37,4 +38,19 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(id)
+}
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	userId := params["userId"]
+
+	isDeleted := models.DeleteUser(userId)
+
+	if !isDeleted {
+		log.Fatal("Something went wrong while deleting record")
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("Record deleted successfully")
 }
