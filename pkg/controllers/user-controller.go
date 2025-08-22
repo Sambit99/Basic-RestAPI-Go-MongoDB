@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Sambit99/Basic-RestAPI-Go-MongoDB/pkg/models"
+	"github.com/Sambit99/Basic-RestAPI-Go-MongoDB/pkg/utils"
 	"github.com/gorilla/mux"
 )
 
@@ -25,4 +26,15 @@ func GetUserById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
+}
+func CreateUser(w http.ResponseWriter, r *http.Request) {
+
+	var user = &models.User{}
+
+	utils.ParseBody(r, user)
+	id := user.CreateUser()
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(id)
 }
